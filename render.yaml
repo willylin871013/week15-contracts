@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: week15-contracts
+    runtime: static
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: Content-Type
+        value: text/html; charset=utf-8

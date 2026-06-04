@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>營業秘密法 Week 15 ── 合約中英對照註釋版</title>
+<style>
+:root{
+  --navy:#1A355E; --blue:#1F6FB8; --gold:#C8920A; --lgold:#FFF8E1;
+  --lblue:#EBF4FD; --red:#C0392B; --green:#1A7A4A; --gray:#555;
+  --bg:#F7F9FC; --white:#fff; --text:#1E1E2E;
+  --font-en:"Georgia",serif; --font-zh:"PingFang TC","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font-en);font-size:15px;line-height:1.8}
+
+/* ── Layout ── */
+.page-wrap{display:flex;min-height:100vh}
+.sidebar{width:240px;min-width:240px;background:var(--navy);color:#fff;
+  position:sticky;top:0;height:100vh;overflow-y:auto;padding:0 0 40px}
+.main{flex:1;padding:40px 48px;max-width:900px}
+
+/* ── Sidebar ── */
+.sidebar h1{font-size:13px;padding:18px 16px 6px;color:var(--gold);letter-spacing:.5px;
+  border-bottom:1px solid rgba(255,255,255,.1);font-family:var(--font-zh)}
+.sidebar a{display:block;padding:7px 16px;color:rgba(255,255,255,.75);text-decoration:none;
+  font-size:12px;font-family:var(--font-zh);border-left:3px solid transparent;
+  transition:.15s}
+.sidebar a:hover,.sidebar a.active{color:#fff;border-left-color:var(--gold);
+  background:rgba(255,255,255,.07)}
+.sidebar .section-group{margin-top:12px}
+.sidebar .group-label{padding:4px 16px;font-size:10px;color:var(--gold);
+  text-transform:uppercase;letter-spacing:1px}
+
+/* ── Header ── */
+.doc-header{background:var(--navy);color:#fff;border-radius:8px;
+  padding:28px 32px;margin-bottom:32px}
+.doc-header h2{font-size:22px;font-family:var(--font-zh);margin-bottom:6px}
+.doc-header p{color:rgba(255,255,255,.7);font-size:13px}
+.doc-header .badge{display:inline-block;background:var(--gold);color:#fff;
+  font-size:11px;padding:2px 10px;border-radius:20px;font-family:var(--font-zh);
+  margin-top:8px}
+
+/* ── Section ── */
+.section{margin-bottom:48px;scroll-margin-top:20px}
+.section-title{font-size:18px;font-weight:700;color:var(--navy);
+  border-left:4px solid var(--gold);padding-left:12px;margin-bottom:18px;
+  font-family:var(--font-zh)}
+.article{margin-bottom:28px}
+.article-title{font-size:14px;font-weight:700;color:var(--blue);
+  margin-bottom:8px;font-family:var(--font-zh)}
+.article p{margin-bottom:10px;text-align:justify}
+.article ol,.article ul{padding-left:20px;margin-bottom:10px}
+.article li{margin-bottom:6px}
+
+/* ── Highlights ── */
+mark.y{background:#FFE066;color:#333;padding:0 2px;border-radius:2px}   /* yellow */
+mark.g{background:#B9F0C8;color:#1a4a2a;padding:0 2px;border-radius:2px} /* green */
+mark.r{background:#FFD0CC;color:#7a1a1a;padding:0 2px;border-radius:2px} /* red/warning */
+mark.b{background:#C5E1FF;color:#0a3060;padding:0 2px;border-radius:2px} /* blue */
+mark.o{background:#FFE4B0;color:#7a4000;padding:0 2px;border-radius:2px} /* orange */
+
+/* ── Annotation tooltip ── */
+.ann{position:relative;cursor:pointer;border-bottom:2px dashed var(--blue)}
+.ann::after{content:attr(data-tip);position:absolute;left:0;top:100%;margin-top:4px;
+  width:320px;background:var(--navy);color:#fff;font-size:12px;line-height:1.5;
+  padding:10px 14px;border-radius:6px;z-index:99;white-space:pre-wrap;
+  font-family:var(--font-zh);pointer-events:none;opacity:0;transition:.15s;
+  box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.ann:hover::after,.ann.open::after{opacity:1}
+
+/* ── Callout box ── */
+.callout{border-radius:6px;padding:14px 18px;margin:16px 0;position:relative;
+  font-family:var(--font-zh);font-size:13px;line-height:1.7}
+.callout::before{font-weight:700;font-size:11px;letter-spacing:.5px;
+  display:block;margin-bottom:6px;text-transform:uppercase}
+.callout.note{background:var(--lgold);border-left:4px solid var(--gold)}
+.callout.note::before{content:"📌 Week 15 重點";color:var(--gold)}
+.callout.warn{background:#FFF0EE;border-left:4px solid var(--red)}
+.callout.warn::before{content:"⚠ 常見錯誤";color:var(--red)}
+.callout.trans{background:var(--lblue);border-left:4px solid var(--blue)}
+.callout.trans::before{content:"🔤 術語翻譯";color:var(--blue)}
+.callout.law{background:#F0FFF4;border-left:4px solid var(--green)}
+.callout.law::before{content:"⚖ 台灣法律對照";color:var(--green)}
+
+/* ── Highlight legend ── */
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;font-size:12px;
+  font-family:var(--font-zh)}
+.legend span{padding:3px 10px;border-radius:12px;display:flex;align-items:center;gap:4px}
+
+/* ── Article divider ── */
+hr.thin{border:none;border-top:1px solid #dde3ee;margin:20px 0}
+
+/* ── Chinese version ── */
+.zh-text{font-family:var(--font-zh)}
+
+/* ── Top bar ── */
+.topbar{background:var(--gold);color:#fff;padding:6px 20px;font-size:12px;
+  font-family:var(--font-zh);text-align:center}
+</style>
+</head>
+<body>
+
+<div class="topbar">營業秘密法理論與實務 ── Week 15 中英對照合約全文 + 課堂註釋</div>
+
+<div class="page-wrap">
+
+<!-- ══ Sidebar ══ -->
+<nav class="sidebar">
+  <h1>Week 15 目錄</h1>
+  <div class="section-group">
+    <div class="group-label">附錄一</div>
+    <a href="#noncomp">Sample of Non-Competition Clause</a>
+    <a href="#nc1a">§1(a) 受雇期間</a>
+    <a href="#nc1b">§1(b) 離職後</a>
+    <a href="#nc1c">§1(c) 例外</a>
+    <a href="#nc2">§2 禁止挖角</a>
+    <a href="#nc3">§3 歸還文件</a>
+    <a href="#nc4">§4 無義務衝突</a>
+    <a href="#nc5">§5 公平之協議</a>
+    <a href="#nc6">§6 衡平救濟</a>
+  </div>
+  <div class="section-group">
+    <div class="group-label">附錄二</div>
+    <a href="#nda">Sample of Nondisclosure Agreement</a>
+    <a href="#nda-pre">前言</a>
+    <a href="#nda1">§1 合約目的</a>
+    <a href="#nda2">§2 定義</a>
+    <a href="#nda3">§3 不使用與不揭露</a>
+    <a href="#nda4">§4 維持保密</a>
+    <a href="#nda5">§5 強制揭露</a>
+    <a href="#nda6">§6 無義務</a>
+    <a href="#nda7">§7 無保證</a>
+    <a href="#nda8">§8 返還資料</a>
+    <a href="#nda9">§9 無授權</a>
+    <a href="#nda10">§10 合約期間</a>
+    <a href="#nda11">§11 爭議與救濟</a>
+    <a href="#nda12">§12 準據法</a>
+    <a href="#nda13">§13 通知</a>
+    <a href="#nda14">§14 雜項</a>
+    <a href="#nda15">§15 全部合約</a>
+  </div>
+  <div class="section-group">
+    <div class="group-label">附錄三</div>
+    <a href="#zhcontract">競業禁止約定書（中文版）</a>
+  </div>
+  <div class="section-group">
+    <div class="group-label">說明</div>
+    <a href="#legend">螢光標示說明</a>
+  </div>
+</nav>
+
+<!-- ══ Main ══ -->
+<main class="main">
+
+<!-- Header -->
+<div class="doc-header">
+  <h2>營業秘密法理論與實務</h2>
+  <p>附錄一～三 合約全文 ── 中英對照 + Week 15 課堂註釋版</p>
+  <div class="badge">懸停帶底線文字可看課堂注釋 ✦ 螢光色標示說明見頁底</div>
+</div>
+
+<!-- 螢光說明 -->
+<div id="legend" class="section">
+<div class="legend">
+  <span style="background:#FFE066;color:#333">🟡 重要術語</span>
+  <span style="background:#B9F0C8;color:#1a4a2a">🟢 正確翻譯</span>
+  <span style="background:#FFD0CC;color:#7a1a1a">🔴 常見錯誤/警示</span>
+  <span style="background:#C5E1FF;color:#0a3060">🔵 關鍵法律概念</span>
+  <span style="background:#FFE4B0;color:#7a4000">🟠 台灣法律對照</span>
+  <span style="border-bottom:2px dashed #1F6FB8;font-family:var(--font-zh)">底線虛線 = 懸停看注釋</span>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!--  附錄一  Sample of Non-Competition Clause           -->
+<!-- ════════════════════════════════════════════════════ -->
+<div id="noncomp" class="section">
+<div class="section-title">附錄一　Sample of Non-Competition Clause</div>
+
+<div class="callout law">
+  勞動基準法第9-1條規定競業禁止四要件（缺一無效）：<br>
+  ① 雇主有應受保護之正當營業利益　② 勞工能接觸或使用營業秘密<br>
+  ③ 競業禁止期間/區域/範圍未逾合理範疇　④ 雇主對勞工有合理補償<br>
+  違反者約定無效；離職後最長不得逾<strong>二年</strong>，超過者縮短為二年。
+</div>
+
+<!-- §1 Non-Competition -->
+<div id="nc1" class="article">
+<div class="article-title">1. Non-Competition.</div>
+
+<div id="nc1a">
+<p><strong>(a) During Employment.</strong></p>
+<p>Except as described in paragraph (c) below, during
+<mark class="y"><span class="ann" data-tip="Employee = 受僱人（合約中指簽約的員工）">Employee</span></mark>'s
+<mark class="b">employment hereunder</mark>,
+<mark class="y">Employee</mark> shall not engage, directly or indirectly, as an
+<span class="ann" data-tip="禁止身份清單：employee（僱員）/ officer（管理階層）/ director（董事）/ partner（合夥人）/ manager（經理人）/ consultant（顧問）/ agent（代理人）/ owner（股東）">
+<mark class="b">employee, officer, director, partner, manager, consultant, agent, owner</mark></span>
+(other than a
+<mark class="y"><span class="ann" data-tip="少數股東（minority shareholder）定義：
+• 非上市上櫃公司：持股 &lt; 50%
+• 上市/上櫃公司（publicly traded）：持股 &lt; 1%（標準更嚴！）
+A shareholder that owns less than 50% of the corporation's shares and doesn't have majority control.">minority shareholder</span></mark>
+or other equity interest of not more than
+<mark class="r">1%</mark>
+of a company whose equity interests are
+<mark class="b">publicly traded</mark>
+on a nationally recognized stock exchange or over-the-counter)
+or in any other capacity, in any
+<mark class="y">competition</mark>
+with the
+<mark class="y">Company</mark>
+or any of its
+<mark class="b">subsidiaries</mark>.</p>
+
+<div class="callout note">
+  <strong>§1(a) 受雇期間競業禁止</strong><br>
+  受雇期間全面適用，禁止以任何身份從事與本公司及其<strong>所有子公司</strong>相競爭之業務。<br>
+  Owner 的例外：非上市公司持股 &lt;50%；上市公司持股 &lt;1%（注意：上市公司門檻更嚴格）
+</div>
+</div>
+
+<hr class="thin">
+<div id="nc1b">
+<p><strong>(b) <span class="ann" data-tip="Subsequent to employment = 離職後（× 就業後）
+注意：這裡用 subsequent（之後）to employment，不是 after employment 或「就業後」">Subsequent to Employment.</span></strong></p>
+<p>Except as described in paragraph (c) below, for a
+<mark class="b"><span class="ann" data-tip="two year period：離職後兩年——對應台灣勞基法第9-1條最長不逾二年的規定">two year period</span></mark>
+following the
+<mark class="y">termination of Employee's employment</mark>
+for
+<mark class="b"><span class="ann" data-tip="for any reason or without reason：無論哪一方、無論何種理由終止，是否有過失均不論，只要終止就開始計算兩年競業禁止期間">any reason or without reason</span></mark>,
+Employee shall not in any capacity … directly or indirectly advise, manage, render or perform services to or for any person or entity which is engaged in a business competitive to that of the Company or any of its subsidiaries … within any
+<mark class="y"><span class="ann" data-tip="geographical location（地理區域範圍）：
+本公司或其子公司在「離職時」或「離職前一年內」曾製造/銷售/行銷產品或服務的地點。
+兩個時間點：
+①  at the time of such termination（離職時）
+②  within a one-year period prior to such termination（離職前一年）
+→ 地理範圍向前追溯一年！">geographical location</span></mark>
+wherein the Company or any of its subsidiaries
+<mark class="b">produces, sells or markets</mark>
+its goods and services
+<mark class="r"><span class="ann" data-tip="重要：地理範圍的判斷時點是「離職時」或「離職前一年內」，不是整個在職期間，須注意此追溯設計">at the time of such termination or within a one-year period prior to such termination</span></mark>.</p>
+
+<div class="callout note">
+  <strong>§1(b) 離職後——兩個關鍵時間點</strong><br>
+  ① 競業禁止期間：離職後 <strong>兩年</strong><br>
+  ② 地理範圍：以公司在 <strong>離職時</strong> 或 <strong>離職前一年內</strong> 曾有業務的任何地點（向前追溯一年）
+</div>
+</div>
+
+<hr class="thin">
+<div id="nc1c">
+<p><strong>(c) Notwithstanding paragraphs (a) and (b) above</strong>, the Company acknowledges that the activities included in ________ [insert items or related Exhibits] hereto will not be prohibited by paragraphs (a) and (b) above. In addition, the Company agrees that any future stock option agreement will include a
+<mark class="b"><span class="ann" data-tip="similar to（相似）≠ identical（相同）——例外範圍不需要完全一樣，只要類似即可">similar</span></mark>
+exception from the non-competition provisions.</p>
+
+<div class="callout note">
+  <strong>§1(c) 例外條款——員工的談判空間</strong><br>
+  員工可與公司談判，將「不受禁止的行為」列入附件，增加競業禁止限制範圍合理的機會。<br>
+  股票選擇權（stock option）在本合約中作為競業禁止的補償工具，
+  future stock option agreement 須包含 <strong>similar to</strong>（非 identical）的例外範圍。
+</div>
+</div>
+</div><!-- end §1 -->
+
+<!-- §2 Non-Solicitation -->
+<div id="nc2" class="article">
+<div class="article-title">2. Non-solicitation.</div>
+<p>For a
+<mark class="b">two year period</mark>
+following the termination of Employee's employment for any reason or without reason, Employee shall not
+<mark class="y"><span class="ann" data-tip="solicit（動詞）/ solicitation（名詞）= 招攬
+induce = 誘使
+完整翻譯：招攬或誘使某人離職">solicit or induce</span></mark>
+any person who was an employee of the Company or any of its subsidiaries
+<mark class="r"><span class="ann" data-tip="限定保護範圍：受僱人離職那天（或）之前三個月內仍在職的員工。
+→ 並非全體所有員工都受保護，只有在特定時間點仍在職者">on the date of Employee's termination or within three months prior</span></mark>
+to leaving her employment with the Company … to leave their employment with the Company.</p>
+
+<div class="callout note">
+  <strong>§2 禁止挖角（Non-Solicitation）</strong><br>
+  期間：離職後 <strong>兩年</strong><br>
+  保護範圍：離職前 <strong>三個月內</strong> 仍在職的員工<br>
+  行為：solicit（招攬）or induce（誘使）sb. to leave their employment（離職）
+</div>
+</div>
+
+<!-- §3 Return of Documents -->
+<div id="nc3" class="article">
+<div class="article-title">3. Return of Documents.</div>
+<p>Immediately upon termination of employment, Employee will return to the Company … all the Company's or any of its subsidiaries' papers, documents and things, including information stored for use in or with computers and software … (and all copies thereof) … regardless whether such papers, documents or things contain
+<mark class="b"><span class="ann" data-tip="Confidential Information（機密資訊）or Trade Secrets（營業秘密）——歸還義務不以包含這些為前提，所有公司文件一律歸還">Confidential Information or Trade Secrets</span></mark>.</p>
+
+<div class="callout warn">
+  歸還義務<strong>不限於含有機密資訊的文件</strong>——所有公司文件（含電腦檔案）一律須歸還，
+  並以書面形式證明已歸還。
+</div>
+</div>
+
+<!-- §4 No Conflicts -->
+<div id="nc4" class="article">
+<div class="article-title">4. No Conflicts.</div>
+<p>To the extent that they exist, Employee will not disclose to the Company … any of Employee's previous employer's confidential information or trade secrets. Further, Employee
+<mark class="y"><span class="ann" data-tip="represents and warrants = 聲明與保證
+• represents = 陳述目前事實（現在式）
+• warrants = 保證未來仍屬真實（未來式）
+兩者合用，加強效力">represents and warrants</span></mark>
+that Employee has not previously assumed any obligations inconsistent with those of this Agreement and that employment by the Company does not conflict with any prior obligations to third parties. … the Company may forward a copy of this Article … to any future prospective or actual employer, and the Employee releases the Company from any claimed liability …</p>
+
+<div class="callout note">
+  <strong>§4 無義務衝突三大重點</strong><br>
+  ① 不洩漏前公司機密 → 避免現任公司違反營業秘密法的法人責任<br>
+  ② 聲明與保證（represents and warrants）本合約不與前公司義務衝突<br>
+  ③ 公司可告知受僱人未來潛在雇主；受僱人不得因此向公司求償
+</div>
+</div>
+
+<!-- §5 Agreement on Fairness -->
+<div id="nc5" class="article">
+<div class="article-title">5. Agreement on Fairness.</div>
+<p>Employee acknowledges that: (i) this Agreement has been specifically bargained between the parties and reviewed by Employee, (ii) Employee
+<mark class="b"><span class="ann" data-tip="has had an opportunity：過去完成式，強調受僱人「曾有機會」獲得法律諮詢，即使最終未諮詢，也已放棄此機會">has had</span></mark>
+an opportunity to obtain legal counsel to review this Agreement, and (iii) the covenants made by and duties imposed upon Employee hereby are fair, reasonable and
+<mark class="y">minimally necessary</mark>
+to protect the
+<mark class="b">legitimate business interests</mark>
+of the Company, and such covenants and duties will not place an
+<mark class="b">undue burden</mark>
+upon Employee's livelihood in the event of termination of Employee's employment by the Company and the strict enforcement of the covenants contained herein.</p>
+
+<div class="callout warn">
+  <strong>§5 不是萬靈丹！</strong><br>
+  本條只是員工承認合約已公平協議，但競業禁止是否真的有效，
+  仍須看：① 競業禁止時間/範圍是否合理  ② 代償金額是否實質足夠。<br>
+  光有這條並不能保證合約完全有效。
+</div>
+</div>
+
+<!-- §6 Equitable Relief -->
+<div id="nc6" class="article">
+<div class="article-title">6. Equitable Relief and Remedies.</div>
+<p>Employee acknowledges that any breach of this Agreement will cause
+<mark class="b"><span class="ann" data-tip="substantial and irreparable harm = 重大且無法以金錢彌補之損害
+→ 這是申請禁制令（injunction）的核心理由">substantial and irreparable harm</span></mark>
+to the Company for which money damages would be an inadequate remedy. Accordingly, the Company shall in any such event be entitled to seek
+<mark class="b">injunctive and other forms of equitable relief</mark>
+… and the prevailing party shall be entitled to recover from the other, the prevailing party's costs (including, without limitation,
+<mark class="r"><span class="ann" data-tip="reasonable attorneys' fees（合理律師費）：在台灣法律體系中，律師費通常不在損害賠償範圍內，必須在合約中事前約定才能主張！">reasonable attorneys' fees</span></mark>)
+… in addition to any other rights or remedies available
+<mark class="y"><span class="ann" data-tip="救濟來源四種：
+• at law（依法律）——範圍最大
+• in equity（依衡平法則）——common law 中無明文時法院依衡平裁量
+• by statute（依實定法）——立法機關制定，有別於判例法
+• by agreement（依合約）——舉出其他合約條款">at law, in equity, by statute</span></mark>
+or ________ [insert related articles or agreements].</p>
+
+<div class="callout note">
+  <strong>§6 衡平救濟（Equitable Relief）</strong><br>
+  • <strong>in addition to and not in lieu of</strong>：禁制令是附加救濟，不取代其他 rights and remedy<br>
+  • reasonable attorneys' fees：必須在合約中<strong>事前</strong>約定，否則台灣法院通常不納入損害賠償範圍<br>
+  • at law / in equity / by statute / by agreement：四種救濟來源並列
+</div>
+</div>
+
+</div><!-- end 附錄一 -->
+
+
+<!-- ════════════════════════════════════════════════════ -->
+<!--  附錄二  Sample of Nondisclosure Agreement          -->
+<!-- ════════════════════════════════════════════════════ -->
+<div id="nda" class="section">
+<div class="section-title">附錄二　Sample of Nondisclosure Agreement</div>
+
+<div class="callout note">
+  <strong>NDA 合約架構概覽</strong><br>
+  從前言定義「揭露方/接收方」可知：此為<strong>雙方（Mutual）NDA</strong>。<br>
+  公司制式 NDA 常分三版：NDA_Disclosing / NDA_Receiving / <strong>NDA_Mutual</strong>
+</div>
+
+<!-- 前言 -->
+<div id="nda-pre" class="article">
+<div class="article-title">前言（Preamble）</div>
+<p>This Nondisclosure Agreement (<mark class="b">hereinafter as "Agreement"</mark>) is made and entered into
+<mark class="y"><span class="ann" data-tip="as of [date] = 從___日期開始（生效）
+= As at / on
+注意：這是合約生效時間點的標準寫法">as of</span></mark>
+○○○○ [insert date] (the "<mark class="y">Effective Date</mark>") between ○○○ [insert names] and ○○○ [insert names]
+(such party when
+<mark class="b">disclosing</mark>
+information being the "<mark class="y">Disclosing Party</mark>"
+and when
+<mark class="b">receiving</mark>
+such information being the "<mark class="y">Receiving Party</mark>").</p>
+
+<div class="callout trans">
+  as of [date] = 從___日期開始 ＝ As at / on（生效時間點）<br>
+  made and entered into = 訂立（合約締結的標準用語）<br>
+  hereinafter as = 以下簡稱<br>
+  Effective Date = 生效日
+</div>
+</div>
+
+<!-- §1 Purpose -->
+<div id="nda1" class="article">
+<div class="article-title">1. Purpose</div>
+<p>The parties wish to explore a business opportunity of
+<mark class="g"><span class="ann" data-tip="mutual interest = 共同利益（✓）
+× 共同感興趣（錯誤）
+→ mutual 在法律文件中指「雙方共同的」，此處應譯為「共同利益」">mutual interest</span></mark>
+relating to ○○○ [insert items or names] (hereinafter as "
+<mark class="y"><span class="ann" data-tip="Proposed Transaction = 計畫交易 / 擬議交易 / 合作計畫（✓）
+× 擬制交易（錯誤）">Proposed Transaction</span></mark>"),
+and in connection with this opportunity, each party
+<mark class="b"><span class="ann" data-tip="has and will disclose：
+• has disclosed = 過去已揭露
+• will disclose = 未來將揭露
+→ 時間性很重要！翻譯時需保留「已向且未來將向」，不能只說「須揭露」（太過概略，失去時間性）">has and will disclose</span></mark>
+to the other certain
+<mark class="y">confidential technical and business information</mark>
+which the Disclosing Party desires the Receiving Party to treat as
+<mark class="b">confidential</mark>.</p>
+
+<div class="callout warn">
+  <strong>「has and will disclose」翻譯陷阱</strong><br>
+  × 「須揭露一定程度機密技術與業務內容」（太過概略，未展現時間性）<br>
+  ✓ 「任一方<strong>已向且未來將向</strong>對方揭露若干機密技術資訊及商業資訊」
+</div>
+</div>
+
+<!-- §2 Definitions -->
+<div id="nda2" class="article">
+<div class="article-title">2. Definitions</div>
+
+<p><strong>(1) "<mark class="y">Confidential Information</mark>"</strong> means information furnished by the Disclosing Party or its
+<mark class="y"><span class="ann" data-tip="Representatives（代表人）範圍極廣：
+董事（directors）、經理人（officers）、受雇人（employees）、代理人（agents）、顧問（advisors）
+→ 接收方須確保所有這些人均遵守 NDA">Representatives</span></mark>
+to the Receiving Party or its Representatives, that is designated as
+"<mark class="b">Confidential</mark>" or "
+<mark class="b"><span class="ann" data-tip="Proprietary = 專有的 / 所有的（非「所有人的」）
+指資訊屬於揭露方所有、具獨占性質">Proprietary</span></mark>"
+by stamp or legend if communicated in writing or other tangible form
+<strong>or otherwise orally at the time of disclosure with a
+<mark class="r"><span class="ann" data-tip="口頭揭露須有後續書面確認（within OO days）才算機密資訊
+→ 若口頭揭露但未在規定天數內書面確認，則不受本協議保護！">written confirmation within ○○ [insert numbers] days</span></mark></strong>
+describing the Confidential Information communicated orally.</p>
+
+<p>Confidential Information includes, but is not limited to, past, present and future business, financial and commercial information, business concepts, prices and pricing methods, marketing and customer information, financial forecasts and projections, technical
+<mark class="b"><span class="ann" data-tip="data（資料）≠ information（資訊）——兩個不同的法律概念，翻譯時應加以區分">data and information</span></mark>,
+formulae, analyses,
+<mark class="y">trade secrets</mark>,
+ideas, methods, processes,
+<mark class="y"><span class="ann" data-tip="know-how = 專門技術（不要音譯「諾好」）">know-how</span></mark>,
+computer programs, products, equipment,
+<mark class="y"><span class="ann" data-tip="product road maps = 產品路徑圖 / 產品規劃">product road maps</span></mark>,
+<mark class="y"><span class="ann" data-tip="prototypes = 原型">prototypes</span></mark>,
+samples, designs, data sheets,
+<mark class="y"><span class="ann" data-tip="schematics = 圖解；configurations = 配置；specifications = 規格（= spec）">schematics, configurations, specifications</span></mark>,
+techniques, drawings, and any other data or information.</p>
+
+<p>Confidential Information does <strong>not</strong> include information which:</p>
+<ol type="a">
+  <li>was generally available to the public <strong>prior to</strong> the time of disclosure by the Disclosing Party;</li>
+  <li>becomes generally available to the public after disclosure by the Disclosing Party to the Receiving Party through
+    <mark class="r"><span class="ann" data-tip="(b) 翻譯注意：
+× 「因接收方作為或不作為，使該資訊變成公眾普遍可取得」（錯誤理解）
+✓ 「非因接收方的作為或不作為而變成公眾已可取得」
+→ 若是接收方故意洩漏才公開，不能援引此例外！">no action or inaction of the Receiving Party</span></mark>;</li>
+  <li>was already in the possession of the Receiving Party on a
+    <mark class="b"><span class="ann" data-tip="on a non-confidential basis = 在不負保密義務的情形下
+→ 接收方持有該資訊時，並不是因為任何保密協議或保密義務才得到的">non-confidential basis</span></mark>
+    prior to its disclosure by the Disclosing Party … as shown by
+    <mark class="r">the Receiving Party's files and records immediately prior to the time of disclosure</mark>;</li>
+  <li>becomes available to the Receiving Party on a non-confidential basis from a person other than the Disclosing Party … who is <strong>not</strong> otherwise bound by a confidentiality agreement …; or</li>
+  <li>is
+    <mark class="b">independently developed</mark>
+    by the Receiving Party without reference to or use of the Disclosing Party's Confidential Information, as shown by
+    <mark class="r">the Receiving Party's files and records immediately prior to the time of disclosure</mark>.</li>
+</ol>
+
+<div class="callout warn">
+  <strong>例外(c)(e) 的舉證要求</strong><br>
+  都需要有「揭露前的書面檔案紀錄（files and records immediately prior to disclosure）」作為佐證，
+  缺少書面紀錄則無法援引此例外！
+</div>
+
+<p><strong>(2) "<mark class="y"><span class="ann" data-tip="Person 廣泛解釋：任何法人、公司、合夥、有限責任公司、其他法律實體或個人
+whether or not capitalized = 無論是否首字大寫，均作相同解釋">Person</span></mark>",</strong> whether or not
+<mark class="r"><span class="ann" data-tip="capitalized = 首字大寫（× 資本化）
+法律文件英文中，已定義術語通常首字大寫（如 Agreement、Party、Company）
+中文合約無大寫，可改用粗體或引號代替">capitalized</span></mark>,
+shall be broadly interpreted to include, without limitation, any corporation, company, partnership, limited liability company, other entity or individual.</p>
+
+<p><strong>(3) "<mark class="y">Representative</mark>"</strong> means, as to any person, that person's
+<mark class="b"><span class="ann" data-tip="Representative 範圍很廣：
+directors（董事）、officers（經理人）、employees（受雇人）、agents（代理人）、advisors（顧問）
+→ 比一般理解的「代表人」範圍更廣！">directors, officers, employees, agents and advisors</span></mark>.</p>
+
+<div class="callout trans">
+  Confidential（機密）/ Proprietary（專有）＝ 兩種標記方式<br>
+  know-how = 專門技術　product road maps = 產品路徑圖<br>
+  data（資料）≠ information（資訊）<br>
+  capitalized = 首字大寫（× 資本化）<br>
+  on a non-confidential basis = 在不負保密義務的情形下
+</div>
+</div>
+
+<!-- §3 Non-Use and Non-Disclosure -->
+<div id="nda3" class="article">
+<div class="article-title">3. Non-Use and Non-Disclosure</div>
+<p>The Receiving Party (1) shall not use Confidential Information for any purpose
+<mark class="b">other than in connection with its evaluation of the Proposed Transaction or the consummation of the Proposed Transaction</mark>;
+and (2) except as required by law, shall keep all Confidential Information confidential, and shall not disclose or reveal any Confidential Information to any person other than its Representatives who otherwise
+<mark class="y"><span class="ann" data-tip="need to know 原則：只能揭露給「必須知悉才能評估/完成計畫交易」的代表人
+→ 不得超範圍揭露，即使是公司內部人員也不例外">need to know</span></mark>
+the Confidential Information for evaluation of the Proposed Transaction or the consummation of the Proposed Transaction,
+<mark class="b"><span class="ann" data-tip="provided that = 附加條件句型（提出附加的條件）
+→ 接收方必須確保這些有 need to know 的代表人，也理解並遵守本保密合約的條款">provided that</span></mark>
+the Receiving Party shall cause those persons to observe the terms of this Agreement. The Receiving Party shall be
+<mark class="r">responsible for any breach</mark>
+of the terms of this Agreement by it or its Representatives.</p>
+
+<div class="callout note">
+  <strong>§3 三大重點</strong><br>
+  ① 目的限制：機密資訊只能用於評估或完成計畫交易<br>
+  ② <strong>need to know 原則</strong>：只揭露給必須知悉的代表人（法律要求除外→見§5）<br>
+  ③ 接收方對代表人的違約行為負責
+</div>
+</div>
+
+<!-- §4 Maintenance of Confidentiality -->
+<div id="nda4" class="article">
+<div class="article-title">4. Maintenance of Confidentiality</div>
+<p>Receiving Party shall use at least
+<mark class="b"><span class="ann" data-tip="雙層標準：
+上限：與保護自己最高機密（most highly confidential information）相同的注意義務
+下限：任何情況不得低於 reasonable degree of care（合理注意程度）
+→ 兩個標準同時適用，取較高者">the same degree of care</span></mark>,
+but in no event less than a
+<mark class="y">reasonable degree of care</mark>,
+to protect the secrecy of and avoid
+<mark class="b">disclosure and unauthorized use</mark>
+of the Disclosing Party's Confidential Information as Receiving Party employs to protect its own
+<mark class="b">most highly confidential information</mark>.</p>
+
+<div class="callout note">
+  <strong>§4 雙層注意義務標準</strong><br>
+  上限：與保護自己最高機密一樣的注意義務<br>
+  下限（最低標準）：<strong>reasonable degree of care（合理注意程度）</strong>——任何情況均不得低於此<br>
+  義務核心：避免「disclosure（揭露）」AND「unauthorized use（未經授權使用）」——兩者並重
+</div>
+</div>
+
+<!-- §5 Mandatory Disclosure -->
+<div id="nda5" class="article">
+<div class="article-title">5. Mandatory Disclosure</div>
+<p>In the event that the Receiving Party or any of its Representatives are requested pursuant to, or required by, applicable law or regulation or by legal process to disclose any Confidential Information, the Receiving Party shall provide the Disclosing Party with
+<mark class="y"><span class="ann" data-tip="prompt notice = 立即通知（盡速，不得拖延）
+目的：讓揭露方有機會聲請 protective order（保護令 / 秘密保持命令）">prompt notice</span></mark>
+of such request or requirement in order to enable the Disclosing Party to seek an appropriate
+<mark class="b">protective order or other remedy</mark>.
+In the event that such protective order … is not obtained, the Receiving Party or its Representative shall disclose only
+<mark class="b">that portion of the Confidential Information which is legally required to be disclosed</mark>
+and
+<mark class="y"><span class="ann" data-tip="use commercially reasonable efforts = 使用商業上合理努力
+→ 這是一個程度標準，不要求做到完全不可能的事，但必須付出合理的商業努力">use commercially reasonable efforts</span></mark>
+to ensure that all Confidential Information that is so disclosed will be accorded confidential treatment.</p>
+
+<div class="callout note">
+  <strong>§5 強制揭露三步驟</strong><br>
+  ① 立即通知揭露方（讓揭露方聲請保護令）<br>
+  ② 最小揭露原則（只揭露法律所要求的最小程度）<br>
+  ③ use commercially reasonable efforts 保障仍受保密處理
+</div>
+</div>
+
+<!-- §6 §7 §9 -->
+<div id="nda6" class="article">
+<div class="article-title">6. No Obligation</div>
+<p>Nothing herein shall obligate any party to
+<mark class="b">proceed with any transaction</mark>
+between them, and each party reserves the right, in its
+<mark class="y">sole discretion</mark>,
+to terminate the discussions contemplated by this Agreement.</p>
+
+<div class="callout note">
+  <strong>第6、7、9條構成一組——NDA 的三個「不」</strong><br>
+  本約只是「評估交易機會」，揭露資訊後：<br>
+  § 6：<strong>不必然</strong>繼續進行交易（No Obligation）<br>
+  § 7：<strong>不擔保</strong>資訊正確性（No Warranty）<br>
+  § 9：<strong>不授予</strong>任何 IP 權利（No License）
+</div>
+</div>
+
+<div id="nda7" class="article">
+<div class="article-title">7. No Warranty</div>
+<p>All Confidential Information is provided
+"<mark class="y"><span class="ann" data-tip="&quot;as is&quot; = 現狀 / 按現狀 / 原樣（以上翻譯均可）
+指資訊以現有狀態提供，不附加任何保證">as is</span></mark>."
+Each party hereto acknowledges that … neither it nor its Representatives … makes any warranties,
+<mark class="b"><span class="ann" data-tip="express warranty = 明示擔保（明確約定的保證）
+implied warranty = 默示擔保（法律推定的保證）">express, implied or otherwise</span></mark>,
+regarding its
+<mark class="y">accuracy, completeness or performance</mark>.</p>
+</div>
+
+<!-- §8 Return of Materials -->
+<div id="nda8" class="article">
+<div class="article-title">8. Return of Materials</div>
+<p>Confidential Information shall be and remain the property of the Disclosing Party or its
+<mark class="b"><span class="ann" data-tip="licensors = 授權人（non-licensors 的意思是：揭露方本身，或揭露方從他人取得授權的那個人）">licensors</span></mark>,
+<mark class="y"><span class="ann" data-tip="as the case may be = 視情況（用於列出兩種或多種可能性）
+→ 機密資訊視情況屬於揭露方本身，或屬於其授權人">as the case may be</span></mark>.
+The Receiving Party shall … promptly deliver … all Confidential Information, and, at
+<mark class="b"><span class="ann" data-tip="at the Receiving Party's election = 由接收方決定 / 依接收方選擇（返還或銷毀）">the Receiving Party's election</span></mark>,
+return or destroy … all copies, reproductions, summaries, analyses or
+<mark class="y"><span class="ann" data-tip="extracts thereof = 從其中之摘錄（thereof = of it）
+based thereon = 以其為基礎（thereon = on it）">extracts thereof or based thereon</span></mark>
+(whether in
+<mark class="b"><span class="ann" data-tip="hard-copy = 有紙本形式的文件（相對於 soft copy 電子形式）">hard-copy form</span></mark>
+or on intangible media, such as electronic mail or computer files) …</p>
+
+<div class="callout trans">
+  shall be and remain = 應是（為）且維持是（為）<br>
+  as the case may be = 視情況<br>
+  its licensors = 其授權人<br>
+  at the Receiving Party's election = 由接收方決定（返還或銷毀）<br>
+  extracts thereof = 從其中之摘錄（thereof = of it）<br>
+  based thereon = 以其為基礎（thereon = on it）<br>
+  hard-copy = 有紙本形式（相對於 soft copy）
+</div>
+</div>
+
+<!-- §9 No License -->
+<div id="nda9" class="article">
+<div class="article-title">9. No License</div>
+<p>Neither this Agreement nor the furnishing of any information shall be construed to transfer or grant (either expressly or by implication,
+<mark class="b"><span class="ann" data-tip="estoppel = 禁反言
+法律原則：如果一方的行為讓另一方合理地相信某事為真，則不能再否認該事">estoppel</span></mark>
+or otherwise) to any party any
+<mark class="b">license, right to use, or other rights</mark>
+under any invention, copyright, patent, trade secret, trademark or other
+<mark class="y">intellectual property right</mark>
+of another party.</p>
+
+<div class="callout warn">
+  <strong>No License ≠ 無許可證（×）</strong><br>
+  正確理解：揭露資訊 <strong>不構成</strong> 向另一方轉讓或授予任何智慧財產權利，
+  無論是明示（expressly）、默示（by implication）或禁反言（estoppel）均不構成授權。
+</div>
+</div>
+
+<!-- §10 Term -->
+<div id="nda10" class="article">
+<div class="article-title">10. Term</div>
+<p>The Receiving Party will hold Confidential Information in confidence for a period of ○○ [insert numbers] years after the Effective Date. The term of this Agreement shall be ○○ [insert numbers] years from the Effective Date, unless
+<mark class="y">earlier terminated</mark>
+by either party upon providing ○○ [insert numbers] days
+<mark class="b"><span class="ann" data-tip="prior written notice = 事前書面通知
+→ 必須在終止前規定天數通知，否則不生效力">prior written notice</span></mark>.
+However, the
+<mark class="y"><span class="ann" data-tip="expiration of this Agreement = 合約到期
+→ 合約到期 ≠ 保密義務消滅！保密期間可能比合約期間更長，合約到期後保密義務仍然存在">expiration of this Agreement</span></mark>
+shall not relieve the parties of their obligations hereunder regarding the protection and use of Confidential Information during the periods set forth above.</p>
+
+<div class="callout warn">
+  <strong>合約期間（Term）≠ 保密期間（Confidentiality Period）</strong><br>
+  兩者通常不同——保密期間通常更長。<br>
+  合約到期後，在保密期間屆滿前，保密義務<strong>仍然存在</strong>！
+</div>
+</div>
+
+<!-- §11 Disputes -->
+<div id="nda11" class="article">
+<div class="article-title">11. Disputes and Remedies</div>
+<p>All disputes … which the parties cannot settle amicably within ○○ [insert numbers] months after
+<mark class="b">written notification by one party to the other</mark>
+or such longer period as may be mutually agreed upon, shall be finally settled by
+<mark class="y"><span class="ann" data-tip="arbitration = 仲裁
+實務提醒：想要採取仲裁方式解決爭議，最好使用各國仲裁協會提供的標準仲裁條款範本，不要自己起草">arbitration</span></mark>
+in ○○ [insert country] … by ○○ [insert numbers] arbitrators … The arbitration proceedings and all communications related thereto shall be conducted in
+<mark class="b">English</mark>.
+Any decision resulting from such arbitration shall be final and
+<mark class="y"><span class="ann" data-tip="binding = 拘束（× 綁定）
+→ 仲裁裁決對雙方具有法律拘束力，且：
+• 雙方放棄司法複審（judicial review）仲裁裁決的所有權利
+• 裁決得向任何有管轄權的法院執行（entered in any court of competent jurisdiction）">binding</span></mark>
+upon the parties. … The parties hereby waive any and all rights to a
+<mark class="b">judicial review</mark>
+of the arbitrator's decision and any
+<mark class="r"><span class="ann" data-tip="award = 司法或仲裁的裁決（× 獎賞）
+Judgment on the award = 裁決得向法院聲請執行">award</span></mark>
+included therein. … either party may obtain
+<mark class="b"><span class="ann" data-tip="preliminary or temporary injunctive relief = 初步或臨時禁制令
+→ 對應台灣法：智審法第52條「聲請定暫時狀態」
+→ in addition to and not in lieu of：附加救濟，不取代其他 rights and remedy（重要！）
+permanent injunctive relief = 永久禁制令（對應：營業秘密法第11條排除侵害請求權）→ 須透過仲裁">preliminary or temporary injunctive relief</span></mark>
+at any time from a court of competent jurisdiction
+<mark class="y">in addition to and not in lieu of</mark>
+any other rights and remedies including monetary damages …</p>
+
+<div class="callout note">
+  <strong>§11 仲裁 + 禁制令</strong><br>
+  • 仲裁裁決（award）：拘束（binding）雙方；雙方放棄司法複審<br>
+  • award = 司法/仲裁裁決（× 獎賞）；binding = 拘束（× 綁定）<br>
+  • 臨時禁制令 → 可直接向法院聲請（不用等仲裁）；永久禁制令 → 須仲裁<br>
+  • in addition to and not in lieu of：附加，<strong>不取代</strong>其他救濟
+</div>
+
+<div class="callout law">
+  台灣對照：<br>
+  preliminary injunction ↔ 智審法第52條「聲請定暫時狀態假處分」<br>
+  permanent injunction ↔ 營業秘密法第11條「排除侵害請求權」
+</div>
+</div>
+
+<!-- §12 §13 §14 §15 -->
+<div id="nda12" class="article">
+<div class="article-title">12. Governing Law</div>
+<p>This Agreement shall be governed by the laws of ○○○ [insert country],
+<mark class="b"><span class="ann" data-tip="without regard to its conflicts of laws rules = 不適用衝突法（國際私法）規則
+→ 確保只適用指定國家的實體法，不會因衝突法規則而改換適用其他國家法律
+注意：法院管轄（jurisdiction）≠ 準據法（governing law）是不同的概念！">without regard to its conflicts of laws rules</span></mark>.</p>
+<div class="callout trans">
+  governed by = 以…為準據法<br>
+  conflicts of law = 衝突法 / 國際私法（不是指「互相衝突的法律」）<br>
+  法院 → 管轄（jurisdiction）；法律 → <strong>準據法</strong>（governing law）
+</div>
+</div>
+
+<div id="nda13" class="article">
+<div class="article-title">13. Notices</div>
+<p>Any
+<mark class="y"><span class="ann" data-tip="notice = 通知（× 注意事項）
+法律文件中 notice 指正式的書面通知">notice</span></mark>
+related to this Agreement shall be in writing effective upon receipt … when received in person, by
+<mark class="b"><span class="ann" data-tip="certified mail return receipt = 雙掛號（要求回執的掛號信件）">certified mail return receipt</span></mark>,
+private overnight courier service requiring signature upon receipt or via email … The parties do <strong>not</strong> need to comply with this section to mark information as Confidential Information.</p>
+<div class="callout note">
+  notice = 通知（× 注意事項）<br>
+  certified mail return receipt = 雙掛號<br>
+  <strong>重點</strong>：將資訊標記為機密資訊時，<strong>不適用本節規定</strong>——交付資訊時直接 mark「機密」即可，
+  不需要透過這個繁瑣的正式通知方式。
+</div>
+</div>
+
+<div id="nda14" class="article">
+<div class="article-title">14. Miscellaneous</div>
+<p>… no failure or delay by any party hereto in exercising any right, power or privilege hereunder shall operate as a
+<mark class="b"><span class="ann" data-tip="waiver = 拋棄（權利）
+→ 未行使或延遲行使某項權利，不代表已拋棄該權利">waiver</span></mark>
+thereof … This Agreement is personal to the parties and
+<mark class="b">non-assignable</mark>
+without the prior written consent of all other parties. This Agreement shall bind and inure to the benefit of the parties hereto and their
+<mark class="y">successors and assigns</mark>.</p>
+</div>
+
+<div id="nda15" class="article">
+<div class="article-title">15. Entire Agreement</div>
+<p>This Agreement contains the entire Agreement between the parties hereto … and it
+<mark class="b">supersedes all prior or contemporaneous written or oral agreements</mark>
+thereon. No modification … shall be binding … unless approved in writing by each such party. This Agreement may be executed in a number of
+<mark class="y"><span class="ann" data-tip="counterparts = 副本（可分開簽署，效力等同於所有人簽署同一份文件）
+× 多份正本（錯誤翻譯）
+binding = 拘束（× 綁定）">counterparts</span></mark>
+with the same effect as if all signatories had signed the same document. Fax or
+<mark class="b">electronic signatures</mark>
+on this Agreement shall be fully binding and effective for all purposes.</p>
+<div class="callout warn">
+  <strong>Entire Agreement ≠ 總結（×）</strong><br>
+  正確：完整協議 / 全部合約條款 / 完整合意條款<br>
+  counterparts = 副本分開簽署（× 多份正本）<br>
+  binding = 拘束（× 綁定）
+</div>
+</div>
+
+<p><strong>IN WITNESS WHEREOF</strong>, the parties have caused this Nondisclosure Agreement to be duly executed by their
+<mark class="b"><span class="ann" data-tip="authorized representatives = 授權代表人
+→ 確保簽署人已獲充分授權，否則合約效力可能受挑戰
+duly executed = 正式簽署">authorized representatives</span></mark>.</p>
+
+</div><!-- end 附錄二 -->
+
+
+<!-- ════════════════════════════════════════════════════ -->
+<!--  附錄三  競業禁止約定書（中文版）                    -->
+<!-- ════════════════════════════════════════════════════ -->
+<div id="zhcontract" class="section zh-text">
+<div class="section-title">附錄三　競業禁止約定書</div>
+
+<div class="callout law">
+  本中文版約定書與英文版 Non-Competition Clause（附錄一）對照閱讀。<br>
+  依台灣勞基法第9-1條：違反四要件之一者約定無效；離職後最長不逾二年。
+</div>
+
+<div class="article">
+<p>立約定書人________________（甲方）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;________________（乙方）</p>
+<p>緣○○○（下稱乙方）受○○○（下稱甲方）聘僱擔任之○○○之職務，今雙方就乙方應對甲方負競業禁止義務一事達成合意，爰訂定以下條款（下稱本合約）以資遵循：</p>
+</div>
+
+<div class="article">
+<div class="article-title">第一條（競業禁止範圍）</div>
+<p>乙方同意於
+<mark class="y"><span class="ann" data-tip="受僱期間 + 離職後24個月（兩年）——對應勞基法9-1條最長不逾二年的規定">受僱於甲方之期間內、或雙方僱傭契約終止或解除後24個月內</span></mark>，
+於中華民國境內，非經甲方事前書面同意，不得為下列行為：</p>
+<ol>
+  <li>以自己或他人名義<mark class="b">經營與甲方相同或類似之事業</mark>、或投資前述事業達該事業資本額或已發行股份總額數
+    <mark class="r"><span class="ann" data-tip="百分之五（5%）的投資門檻——對應英文版 minority shareholder 例外條款（非上市公司 &lt;50%、上市公司 &lt;1%）">百分之五</span></mark>
+    以上。</li>
+  <li>為與甲方業務相同或類似之公司、商號或個人之
+    <mark class="y">受僱人、受任人、承攬人或顧問</mark>；
+    或為此類單位<mark class="b">招徠甲方之現職員工</mark>前往任職。</li>
+  <li>乙方不得直接或間接從事任何與任職於甲方時所負責之業務，或與該業務有關之事務相競爭之行為，包括但不限於提升、改善或調整甲方競爭者競爭力或業務經營之行為，為甲方競爭者提供勞務，接觸、拜訪甲方客戶（含洽商中之客戶）或向甲方客戶要約、銷售相同或相類甲方之產品或服務，或向甲方之競爭者銷售或授權與甲方研發成果相同或相類之
+    <mark class="y">智慧財產權</mark>。</li>
+</ol>
+</div>
+
+<div class="article">
+<div class="article-title">第二條（競業禁止對償）</div>
+<p>乙方同意甲方於在職期間內支付乙方之薪資或獎勵，包括但不限於紅利、年終獎金等，均已包含要求乙方負擔本合約所定競業禁止...</p>
+<div class="callout warn">
+  <strong>競業禁止「對償」注意！</strong><br>
+  勞基法第9-1條第4款：合理補償<strong>不包括</strong>勞工於工作期間所受領之給付（在職薪資不算）。<br>
+  最好在入職或升遷時，另外明確約定離職後的競業禁止補償金額。
+</div>
+</div>
+
+</div><!-- end 附錄三 -->
+
+<div style="text-align:center;color:var(--gray);font-size:12px;margin-top:48px;padding-top:24px;border-top:1px solid #dde3ee">
+  營業秘密法理論與實務 Week 15 ── 中英對照合約全文 + 課堂註釋版<br>
+  懸停帶虛底線文字可看課堂注釋 ✦ 螢光標示說明見頁頂
+</div>
+
+</main>
+</div><!-- end page-wrap -->
+
+<script>
+// Smooth scroll for sidebar links
+document.querySelectorAll('.sidebar a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const id = a.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    document.querySelectorAll('.sidebar a').forEach(x=>x.classList.remove('active'));
+    a.classList.add('active');
+  });
+});
+// Click-toggle for annotation on mobile
+document.querySelectorAll('.ann').forEach(el => {
+  el.addEventListener('click', e => {
+    e.stopPropagation();
+    el.classList.toggle('open');
+  });
+});
+document.addEventListener('click', () => {
+  document.querySelectorAll('.ann.open').forEach(el => el.classList.remove('open'));
+});
+// Highlight active section on scroll
+const sections = document.querySelectorAll('.section, .article');
+const links = document.querySelectorAll('.sidebar a');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      const id = entry.target.id;
+      links.forEach(l => {
+        if(l.getAttribute('href') === '#'+id) l.classList.add('active');
+        else l.classList.remove('active');
+      });
+    }
+  });
+}, {threshold: 0.3});
+sections.forEach(s => { if(s.id) obs.observe(s); });
+</script>
+</body>
+</html>
