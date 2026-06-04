@@ -875,6 +875,335 @@ const obs = new IntersectionObserver((entries) => {
   });
 }, {threshold: 0.3});
 sections.forEach(s => { if(s.id) obs.observe(s); });
-</script>
+
+/* ══════════════════════════════════════════════════════════
+   雙擊翻譯引擎
+   優先查法律詞典 → 未命中則呼叫 MyMemory API
+   ══════════════════════════════════════════════════════════ */
+const DICT = {
+  // ── A ──
+  "agreement":{"zh":"合約 / 協議","note":"泛指書面或口頭合意"},
+  "arbitration":{"zh":"仲裁","note":"由仲裁人取代法院解決爭議"},
+  "arbitrator":{"zh":"仲裁人","note":"仲裁程序中的裁判者"},
+  "award":{"zh":"裁決（司法或仲裁）","note":"× 獎賞；法律語境指仲裁或司法的最終判斷"},
+  "assignable":{"zh":"可轉讓的","note":"non-assignable = 不得轉讓"},
+  "assigns":{"zh":"受讓人","note":"successors and assigns = 繼承人與受讓人"},
+  "acknowledge":{"zh":"承認","note":"正式書面承認某項事實或義務"},
+  "accuracy":{"zh":"正確性","note":"regarding its accuracy = 關於其正確性"},
+  "applicable":{"zh":"適用的","note":"applicable law = 適用法律"},
+  "authorized":{"zh":"有授權的 / 授權的","note":"duly authorized = 已有充分授權的"},
+  // ── B ──
+  "binding":{"zh":"拘束（具法律約束力）","note":"× 綁定；binding upon the parties = 對雙方具拘束力"},
+  "breach":{"zh":"違約 / 違反","note":"breach of agreement = 違反合約"},
+  "burden":{"zh":"負擔","note":"undue burden = 不當負擔"},
+  // ── C ──
+  "capitalized":{"zh":"首字大寫","note":"合約術語；× 資本化"},
+  "certify":{"zh":"證明 / 認證","note":"so certify in writing = 以書面形式證明"},
+  "clause":{"zh":"條款","note":"non-competition clause = 競業禁止條款"},
+  "confidential":{"zh":"機密的","note":"confidential information = 機密資訊"},
+  "confidentiality":{"zh":"保密（義務）","note":"maintenance of confidentiality = 維持保密"},
+  "conflict":{"zh":"衝突","note":"no conflicts = 無義務衝突"},
+  "consent":{"zh":"同意","note":"written consent = 書面同意"},
+  "construe":{"zh":"解釋 / 理解","note":"shall not be construed to = 不得解釋為"},
+  "consummation":{"zh":"完成 / 締結","note":"consummation of the Proposed Transaction = 完成計畫交易"},
+  "contemporaneous":{"zh":"同時期的","note":"prior or contemporaneous agreements = 先前或同時的協議"},
+  "controlling":{"zh":"控制的","note":"controlling persons = 控制人"},
+  "covenants":{"zh":"承諾 / 契約義務","note":"covenants made by Employee = 受僱人所承擔的義務"},
+  "counterparts":{"zh":"副本（分開簽署）","note":"× 多份正本；各方分別簽署，效力等同同一份"},
+  "copyright":{"zh":"著作權","note":"IP 權利的一種"},
+  "competent":{"zh":"有管轄權的","note":"court of competent jurisdiction = 有管轄權的法院"},
+  "commercially":{"zh":"商業上","note":"commercially reasonable efforts = 商業上合理努力"},
+  "comply":{"zh":"遵守 / 符合","note":"comply with this section = 遵守本節規定"},
+  // ── D ──
+  "damages":{"zh":"損害賠償","note":"money damages = 金錢賠償；inadequate remedy = 不足夠的救濟"},
+  "designated":{"zh":"標記為 / 指定為","note":"designated as Confidential = 標記為「機密」"},
+  "destroy":{"zh":"銷毀","note":"return or destroy = 返還或銷毀"},
+  "disclose":{"zh":"揭露","note":"disclose information = 揭露資訊"},
+  "disclosure":{"zh":"揭露","note":"mandatory disclosure = 強制揭露；unauthorized use = 未經授權使用"},
+  "discretion":{"zh":"自由裁量","note":"sole discretion = 獨自裁量（不需他方同意）"},
+  "dispute":{"zh":"爭議 / 糾紛","note":"disputes and remedies = 爭議與救濟"},
+  "duly":{"zh":"適當地 / 正式地","note":"duly authorized = 已有充分授權地；duly executed = 正式簽署"},
+  // ── E ──
+  "effective":{"zh":"生效的","note":"effective date = 生效日"},
+  "employ":{"zh":"使用 / 採用","note":"employs to protect = 採用的保護方式"},
+  "employee":{"zh":"受僱人","note":"合約中指簽約員工"},
+  "employment":{"zh":"僱傭（關係）","note":"termination of employment = 終止僱傭關係"},
+  "enforce":{"zh":"執行 / 強制執行","note":"strict enforcement = 嚴格執行"},
+  "enforceability":{"zh":"可執行性","note":"validity, scope and enforceability = 有效性、範圍及可執行性"},
+  "entity":{"zh":"法律實體","note":"any entity = 任何法律實體"},
+  "equity":{"zh":"衡平法則","note":"in equity = 依衡平法則（common law 中無明文時法院依衡平裁量）"},
+  "estoppel":{"zh":"禁反言","note":"法律原則：行為讓他方合理信賴後，不得再否認"},
+  "evaluation":{"zh":"評估","note":"evaluation of the Proposed Transaction = 評估計畫交易"},
+  "exclusive":{"zh":"獨家的 / 排他的","note":"非 exclusive 則為 non-exclusive（非獨家）"},
+  "execute":{"zh":"簽署 / 執行","note":"duly executed = 正式簽署"},
+  "expiration":{"zh":"到期","note":"expiration of this Agreement = 合約到期"},
+  "expressly":{"zh":"明示地 / 明確地","note":"expressly or by implication = 明示或默示"},
+  // ── F ──
+  "fairness":{"zh":"公平","note":"agreement on fairness = 公平之協議"},
+  "financial":{"zh":"財務的","note":"financial forecasts = 財務預測"},
+  "foregoing":{"zh":"前述的","note":"notwithstanding the foregoing = 縱有前開規定"},
+  "formulae":{"zh":"公式","note":"technical formulae = 技術公式"},
+  // ── G ──
+  "geographical":{"zh":"地理的","note":"geographical location = 地理區域範圍"},
+  "governing":{"zh":"準據","note":"governing law = 準據法"},
+  "grant":{"zh":"授予","note":"transfer or grant = 轉讓或授予"},
+  // ── H ──
+  "hereunder":{"zh":"依本約","note":"obligations hereunder = 本約下的義務"},
+  "herein":{"zh":"本合約中","note":"nothing herein = 本合約中任何內容"},
+  "hereinafter":{"zh":"以下（簡稱）","note":"hereinafter as Agreement = 以下簡稱「本合約」"},
+  "hereto":{"zh":"本合約各方","note":"parties hereto = 本合約各方"},
+  // ── I ──
+  "implied":{"zh":"默示的","note":"implied warranty = 默示擔保；× 明示（express）"},
+  "implication":{"zh":"默示","note":"by implication = 默示地"},
+  "inadequate":{"zh":"不足的","note":"inadequate remedy = 不足夠的救濟"},
+  "induce":{"zh":"誘使","note":"solicit or induce = 招攬或誘使"},
+  "injunction":{"zh":"禁制令","note":"temporary injunction = 臨時禁制令；permanent injunction = 永久禁制令"},
+  "injunctive":{"zh":"禁制令的","note":"injunctive relief = 禁制令救濟"},
+  "intellectual":{"zh":"智慧（財產）","note":"intellectual property = 智慧財產"},
+  "irreparable":{"zh":"無法彌補的","note":"irreparable harm = 無法以金錢彌補之損害"},
+  // ── J ──
+  "judgment":{"zh":"判決","note":"judgment on the award = 對裁決的執行判決"},
+  "jurisdiction":{"zh":"管轄權","note":"court of competent jurisdiction = 有管轄權的法院；注意：≠ 準據法（governing law）"},
+  // ── K ──
+  "know-how":{"zh":"專門技術","note":"指實際操作的技術知識，× 音譯"},
+  // ── L ──
+  "legend":{"zh":"說明文字 / 標記","note":"by stamp or legend = 透過戳印或書面說明"},
+  "legitimate":{"zh":"合法的","note":"legitimate business interests = 合法商業利益"},
+  "liability":{"zh":"責任 / 法律責任","note":"limited liability = 有限責任"},
+  "license":{"zh":"授權（動詞：授予授權）","note":"no license = 無授權；× 無許可證"},
+  "licensors":{"zh":"授權人","note":"Disclosing Party or its licensors = 揭露方或其授權人"},
+  "litigation":{"zh":"訴訟","note":"相對於 arbitration（仲裁）"},
+  // ── M ──
+  "mandatory":{"zh":"強制的","note":"mandatory disclosure = 強制揭露"},
+  "material":{"zh":"文件 / 資料","note":"return of materials = 返還資料"},
+  "minimally":{"zh":"最低程度地","note":"minimally necessary = 最低限度所需"},
+  "modification":{"zh":"修改","note":"no modification = 不得修改"},
+  "mutual":{"zh":"雙方共同的 / 相互的","note":"mutual interest = 共同利益（× 共同感興趣）；mutual NDA = 雙方保密合約"},
+  // ── N ──
+  "negotiate":{"zh":"協商","note":"specifically bargained = 特別協商"},
+  "nondisclosure":{"zh":"保密（不揭露）","note":"nondisclosure agreement = 保密合約（NDA）"},
+  "notwithstanding":{"zh":"縱使 / 儘管","note":"notwithstanding the foregoing = 縱有前開規定"},
+  // ── O ──
+  "obligation":{"zh":"義務","note":"no obligation = 無義務；prior obligations = 既有義務"},
+  "obtain":{"zh":"取得","note":"obtain legal counsel = 取得法律諮詢"},
+  // ── P ──
+  "party":{"zh":"當事人 / 一方","note":"the parties = 各方當事人；prevailing party = 勝訴方"},
+  "patent":{"zh":"專利","note":"IP 權利的一種"},
+  "performance":{"zh":"履行 / 效能","note":"accuracy, completeness or performance = 正確性、完整性或效能"},
+  "possession":{"zh":"持有","note":"in Employee's possession = 由受僱人持有"},
+  "preliminary":{"zh":"初步的","note":"preliminary injunction = 初步禁制令"},
+  "prevailing":{"zh":"勝訴的","note":"prevailing party = 勝訴方"},
+  "privilege":{"zh":"特權","note":"right, power or privilege = 權利、權力或特權"},
+  "prohibit":{"zh":"禁止","note":"prohibited by paragraphs (a) and (b) = 受(a)(b)款禁止"},
+  "proprietary":{"zh":"專有的","note":"designated as Proprietary = 標記為「專有/所有」"},
+  "protective":{"zh":"保護性的","note":"protective order = 保護令（秘密保持命令）"},
+  "prototype":{"zh":"原型","note":"prototypes, samples, designs = 原型、樣品、設計"},
+  // ── R ──
+  "reasonable":{"zh":"合理的","note":"reasonable degree of care = 合理注意程度；reasonable attorneys' fees = 合理律師費（須事前約定）"},
+  "regulation":{"zh":"法規","note":"applicable law or regulation = 適用法律或法規"},
+  "remedy":{"zh":"救濟（方法）","note":"rights or remedies = 權利或救濟方式"},
+  "representative":{"zh":"代表人","note":"董事、經理人、受雇人、代理人或顧問（範圍很廣）"},
+  "reproductions":{"zh":"複製品","note":"copies, reproductions, summaries = 副本、複製、總結"},
+  "request":{"zh":"要求 / 請求","note":"upon the Disclosing Party's written request = 依揭露方的書面要求"},
+  "require":{"zh":"要求 / 規定","note":"as required by law = 法律另有規定"},
+  // ── S ──
+  "schematic":{"zh":"圖解","note":"schematics, configurations, specifications = 圖解、配置、規格"},
+  "secrecy":{"zh":"秘密性","note":"protect the secrecy = 保護秘密性"},
+  "shareholder":{"zh":"股東","note":"minority shareholder = 少數股東"},
+  "solicitation":{"zh":"招攬","note":"non-solicitation = 禁止挖角"},
+  "solicit":{"zh":"招攬","note":"solicit or induce = 招攬或誘使（員工離職）"},
+  "specification":{"zh":"規格","note":"spec 的全稱；data sheets, schematics, configurations, specifications"},
+  "statute":{"zh":"實定法","note":"立法機關制定的成文法；有別於判例法（case law）"},
+  "subsidiary":{"zh":"子公司","note":"Company or any of its subsidiaries = 本公司或其任何子公司"},
+  "successor":{"zh":"繼承人","note":"successors and assigns = 繼承人與受讓人"},
+  "supersede":{"zh":"取代","note":"supersedes all prior agreements = 取代所有先前協議"},
+  // ── T ──
+  "tangible":{"zh":"有形的","note":"tangible form = 有形之形式（書面等）；× intangible = 無形的"},
+  "terminate":{"zh":"終止","note":"termination of employment = 終止僱傭關係"},
+  "termination":{"zh":"終止","note":"following the termination = 終止後"},
+  "trademark":{"zh":"商標","note":"IP 權利的一種"},
+  "transaction":{"zh":"交易","note":"proposed transaction = 計畫交易"},
+  // ── U ──
+  "unauthorized":{"zh":"未經授權的","note":"unauthorized use = 未經授權使用"},
+  "undue":{"zh":"不當的","note":"undue burden = 不當負擔"},
+  // ── V ──
+  "validity":{"zh":"有效性","note":"validity, scope and enforceability = 有效性、範圍及可執行性"},
+  // ── W ──
+  "waiver":{"zh":"拋棄（權利）","note":"operate as a waiver = 構成拋棄；未行使不等於拋棄"},
+  "warranty":{"zh":"擔保","note":"express warranty = 明示擔保；implied warranty = 默示擔保；no warranty = 無擔保"},
+  "whereof":{"zh":"茲（正式用語）","note":"in witness whereof = 茲保證（合約結尾簽署常用語）"},
+  // ── 常見縮寫 ──
+  "nda":{"zh":"保密合約（Non-Disclosure Agreement）","note":"又稱 Confidentiality Agreement"},
+  "ip":{"zh":"智慧財產（Intellectual Property）","note":"包含專利、著作權、商標、營業秘密"},
+  "llc":{"zh":"有限責任公司（Limited Liability Company）","note":"美國常見公司型態"},
+  // ── 多詞短語（需精確比對） ──
+  "as is":{"zh":"現狀 / 按現狀 / 原樣","note":"不附加任何保證，以現有狀態提供"},
+  "as the case may be":{"zh":"視情況","note":"用於列舉兩種或多種可能性"},
+  "at law":{"zh":"依法律","note":"救濟來源，範圍最大"},
+  "in equity":{"zh":"依衡平法則","note":"common law 體系，無明文時法院依衡平裁量"},
+  "by statute":{"zh":"依實定法","note":"立法機關制定的成文法"},
+  "in lieu of":{"zh":"取代","note":"not in lieu of = 不取代（附加而非取代）"},
+  "need to know":{"zh":"必須知悉原則","note":"只能揭露給必須知悉才能評估交易的代表人"},
+  "no action or inaction":{"zh":"非因作為或不作為","note":"(b)款例外；接收方的作為/不作為均不能使資訊公開"},
+  "on a non-confidential basis":{"zh":"在不負保密義務的情形下","note":"指取得資訊時不受任何保密義務約束"},
+  "prior written notice":{"zh":"事前書面通知","note":"合約終止前須提前OO天以書面通知"},
+  "provided that":{"zh":"附加條件（以…為條件）","note":"引出附加義務或限制條件的連接詞"},
+  "sole discretion":{"zh":"獨自裁量","note":"不需他方同意，自行決定"},
+  "subsequent to":{"zh":"之後 / 在…之後","note":"subsequent to employment = 離職後（× 就業後）"},
+  "trade secret":{"zh":"營業秘密","note":"台灣有《營業秘密法》專門保護"},
+  "represents and warrants":{"zh":"聲明與保證","note":"represents = 陳述目前事實；warrants = 保證未來仍屬真實"},
+  "without regard to":{"zh":"不考慮 / 不適用","note":"without regard to conflicts of law rules = 不適用衝突法規則"},
+  "in addition to":{"zh":"除了…之外（附加，非取代）","note":"in addition to and not in lieu of = 附加，且不能取代"},
+  "for any reason or without reason":{"zh":"無論任何理由或無理由","note":"指無論哪方、無論何種理由終止均觸發義務"},
+  "certified mail return receipt":{"zh":"雙掛號","note":"要求回執的掛號信件"},
+  "intellectual property":{"zh":"智慧財產","note":"包含專利、著作權、商標、營業秘密"},
+  "governing law":{"zh":"準據法","note":"決定合約適用哪國法律；≠ 法院管轄"},
+  "conflicts of law":{"zh":"衝突法 / 國際私法","note":"決定跨國爭議適用哪國法律的規則"},
+  "commercially reasonable efforts":{"zh":"商業上合理努力","note":"程度標準，不要求做到不可能，但須付出合理努力"},
+  "reasonable degree of care":{"zh":"合理注意程度","note":"保密義務的下限標準"},
+  "entire agreement":{"zh":"全部合約條款 / 完整協議","note":"取代所有先前書面或口頭協議；× 總結"},
+  "equitable relief":{"zh":"衡平救濟","note":"非金錢賠償的救濟方式，如禁制令"},
+  "attorneys' fees":{"zh":"律師費","note":"reasonable attorneys' fees 須在合約中事前約定才能主張"},
+  "protective order":{"zh":"保護令 / 秘密保持命令","note":"法院核發，保護機密資訊不被強制揭露"},
+  "minor shareholder":{"zh":"少數股東","note":"非上市公司持股<50%；上市公司持股<1%"},
+  "minority shareholder":{"zh":"少數股東","note":"非上市公司持股<50%；上市公司持股<1%"},
+  "publicly traded":{"zh":"公開上市 / 上市交易","note":"股票在交易所或店頭市場流通"},
+  "non-assignable":{"zh":"不得轉讓的","note":"未經全體書面同意不得轉讓本合約"},
+  "permanent injunction":{"zh":"永久禁制令","note":"對應台灣：營業秘密法第11條排除侵害請求權"},
+  "preliminary injunction":{"zh":"初步（臨時）禁制令","note":"對應台灣：智審法第52條聲請定暫時狀態"},
+  "proposed transaction":{"zh":"計畫交易 / 擬議交易","note":"× 擬制交易；合作計畫的統稱"},
+  "disclosing party":{"zh":"揭露方","note":"提供機密資訊的一方"},
+  "receiving party":{"zh":"接收方","note":"收受機密資訊的一方"},
+  "confidential information":{"zh":"機密資訊","note":"需依本合約保密的資訊"},
+  "effective date":{"zh":"生效日","note":"合約正式生效的日期"},
+  "return of materials":{"zh":"返還資料","note":"合約終止後須歸還機密資訊"},
+  "no obligation":{"zh":"無義務","note":"NDA不賦予繼續進行交易的義務"},
+  "no warranty":{"zh":"無擔保","note":"資訊以現狀提供，不作任何擔保"},
+  "no license":{"zh":"無授權","note":"揭露資訊不構成IP授權；× 無許可證"},
+  "independent development":{"zh":"獨立研發","note":"接收方未參考揭露方資訊而獨立開發"},
+  "product road maps":{"zh":"產品路徑圖 / 產品規劃","note":"product roadmap 的複數"},
+};
+
+// ── Popup HTML ──────────────────────────────────────────────
+const popup = document.createElement('div');
+popup.id = 'trans-popup';
+popup.style.cssText = `
+  position:fixed;z-index:9999;display:none;
+  max-width:320px;min-width:200px;
+  background:#1A355E;color:#fff;
+  border-radius:10px;padding:0;
+  box-shadow:0 8px 32px rgba(0,0,0,.45);
+  font-family:"PingFang TC","Microsoft JhengHei",sans-serif;
+  font-size:14px;line-height:1.6;
+  border:2px solid #C8920A;
+  overflow:hidden;
+`;
+popup.innerHTML = `
+  <div id="tp-header" style="background:#C8920A;padding:6px 14px;font-size:11px;font-weight:700;letter-spacing:.5px;display:flex;justify-content:space-between;align-items:center">
+    <span>📖 雙擊翻譯</span>
+    <span id="tp-src" style="font-size:10px;opacity:.85"></span>
+  </div>
+  <div style="padding:10px 14px 12px">
+    <div id="tp-word" style="font-size:13px;color:#FFD580;margin-bottom:4px;font-style:italic"></div>
+    <div id="tp-zh" style="font-size:16px;font-weight:700;color:#fff;margin-bottom:6px"></div>
+    <div id="tp-note" style="font-size:12px;color:rgba(255,255,255,.75);border-top:1px solid rgba(255,255,255,.15);padding-top:6px;display:none"></div>
+    <div id="tp-loading" style="font-size:12px;color:rgba(255,255,255,.6);display:none">查詢中…</div>
+  </div>
+`;
+document.body.appendChild(popup);
+
+// ── Core lookup ─────────────────────────────────────────────
+function lookupDict(raw){
+  const w = raw.trim().toLowerCase().replace(/[^a-z0-9'\-\s]/g,'');
+  if(DICT[w]) return {result:DICT[w], src:'法律詞典'};
+  // try removing trailing s/ed/ing/ly
+  const stems = [
+    w.replace(/ies$/,'y'),
+    w.replace(/([^aeiou])ies$/,'$1y'),
+    w.replace(/s$/,''),
+    w.replace(/es$/,''),
+    w.replace(/ing$/,''),
+    w.replace(/ed$/,''),
+    w.replace(/tion$/,'te'),
+    w.replace(/ly$/,''),
+    w.replace(/ment$/,''),
+    w.replace(/ness$/,''),
+    w.replace(/al$/,''),
+  ];
+  for(const s of stems){
+    if(s.length>2 && DICT[s]) return {result:DICT[s], src:'法律詞典（詞形還原）'};
+  }
+  return null;
+}
+
+async function translateAPI(word){
+  try{
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|zh-TW`;
+    const r = await fetch(url);
+    const d = await r.json();
+    if(d.responseStatus===200 && d.responseData){
+      const t = d.responseData.translatedText;
+      if(t && t!==word) return t;
+    }
+  }catch(e){}
+  return null;
+}
+
+function showPopup(word, x, y){
+  const el = document.getElementById;
+  popup.style.display='block';
+  document.getElementById('tp-word').textContent = word;
+  document.getElementById('tp-zh').textContent = '查詢中…';
+  document.getElementById('tp-note').style.display='none';
+  document.getElementById('tp-loading').style.display='none';
+  document.getElementById('tp-src').textContent = '';
+  // Position
+  const pw=popup.offsetWidth||280, ph=popup.offsetHeight||120;
+  let lx = Math.min(x+12, window.innerWidth-pw-16);
+  let ly = (y+ph+16 > window.innerHeight) ? y-ph-8 : y+16;
+  popup.style.left = lx+'px';
+  popup.style.top  = ly+'px';
+
+  const hit = lookupDict(word);
+  if(hit){
+    document.getElementById('tp-zh').textContent = hit.result.zh;
+    document.getElementById('tp-src').textContent = hit.src;
+    if(hit.result.note){
+      const noteEl = document.getElementById('tp-note');
+      noteEl.textContent = hit.result.note;
+      noteEl.style.display='block';
+    }
+  } else {
+    document.getElementById('tp-zh').textContent = '翻譯中…';
+    document.getElementById('tp-src').textContent = 'MyMemory API';
+    translateAPI(word).then(t=>{
+      if(t){
+        document.getElementById('tp-zh').textContent = t;
+      } else {
+        document.getElementById('tp-zh').textContent = '（查無結果）';
+      }
+    });
+  }
+}
+
+// ── dblclick handler ────────────────────────────────────────
+document.addEventListener('dblclick', e=>{
+  const sel = window.getSelection();
+  if(!sel || sel.isCollapsed) return;
+  const word = sel.toString().trim();
+  if(!word || word.length<2 || word.length>80) return;
+  showPopup(word, e.clientX, e.clientY);
+  e.preventDefault();
+});
+
+// Close popup on outside click / scroll
+document.addEventListener('click', e=>{
+  if(!popup.contains(e.target)) popup.style.display='none';
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') popup.style.display='none';
+});
+window.addEventListener('scroll', ()=>{ popup.style.display='none'; }, {passive:true});
+
 </body>
 </html>
