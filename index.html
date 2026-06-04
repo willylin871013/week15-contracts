@@ -90,14 +90,29 @@ mark.r::after{content:"常見錯誤";background:#C0392B;color:#fff}
 mark.b::after{content:"關鍵概念";background:#1F6FB8;color:#fff}
 mark.o::after{content:"法律對照";background:#B06000;color:#fff}
 
-/* ── Annotation tooltip ── */
-.ann{position:relative;cursor:pointer;border-bottom:2px dashed var(--blue)}
-.ann::after{content:attr(data-tip);position:absolute;left:0;top:100%;margin-top:4px;
-  width:320px;background:var(--navy);color:#fff;font-size:12px;line-height:1.5;
-  padding:10px 14px;border-radius:6px;z-index:99;white-space:pre-wrap;
-  font-family:var(--font-zh);pointer-events:none;opacity:0;transition:.15s;
-  box-shadow:0 4px 16px rgba(0,0,0,.3)}
-.ann:hover::after,.ann.open::after{opacity:1}
+/* ── Annotation：底線保留，hover tooltip 移除，改用 inline 顯示 ── */
+.ann{border-bottom:2px solid var(--blue);cursor:default}
+.ann::after{display:none}  /* 停用舊 hover tooltip */
+
+/* ── 永遠可見的 inline 標注框 ── */
+.tip-inline{
+  display:inline-block;
+  background:var(--lblue);
+  border:1.5px solid var(--blue);
+  border-top:3px solid var(--blue);
+  color:var(--navy);
+  font-size:9.5px;
+  font-family:var(--font-zh);
+  line-height:1.55;
+  padding:3px 8px 4px;
+  border-radius:0 4px 4px 4px;
+  margin-left:3px;
+  vertical-align:text-top;
+  max-width:260px;
+  white-space:normal;
+  word-break:keep-all;
+  box-shadow:0 1px 4px rgba(31,111,184,.15);
+}
 
 /* ── Callout box ── */
 .callout{border-radius:6px;padding:14px 18px;margin:16px 0;position:relative;
@@ -880,15 +895,19 @@ document.querySelectorAll('.sidebar a').forEach(a => {
     a.classList.add('active');
   });
 });
-// Click-toggle for annotation on mobile
-document.querySelectorAll('.ann').forEach(el => {
-  el.addEventListener('click', e => {
-    e.stopPropagation();
-    el.classList.toggle('open');
-  });
-});
-document.addEventListener('click', () => {
-  document.querySelectorAll('.ann.open').forEach(el => el.classList.remove('open'));
+// ── 把所有 .ann[data-tip] 的 tooltip 直接插入為永遠可見的 inline 標注框 ──
+document.querySelectorAll('.ann[data-tip]').forEach(el => {
+  const raw = el.getAttribute('data-tip') || '';
+  if (!raw.trim()) return;
+  const box = document.createElement('span');
+  box.className = 'tip-inline';
+  // 換行 → <br>，保留多行結構
+  box.innerHTML = raw.trim()
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/\n/g, '<br>');
+  // 插到 .ann 後面（若 .ann 在 mark 裡，插到 mark 後）
+  const anchor = el.closest('mark') || el;
+  anchor.parentNode.insertBefore(box, anchor.nextSibling);
 });
 // Highlight active section on scroll
 const sections = document.querySelectorAll('.section, .article');
