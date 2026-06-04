@@ -54,11 +54,41 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-en);font-size
 .article li{margin-bottom:6px}
 
 /* ── Highlights ── */
-mark.y{background:#FFE066;color:#333;padding:0 2px;border-radius:2px}   /* yellow */
-mark.g{background:#B9F0C8;color:#1a4a2a;padding:0 2px;border-radius:2px} /* green */
-mark.r{background:#FFD0CC;color:#7a1a1a;padding:0 2px;border-radius:2px} /* red/warning */
-mark.b{background:#C5E1FF;color:#0a3060;padding:0 2px;border-radius:2px} /* blue */
-mark.o{background:#FFE4B0;color:#7a4000;padding:0 2px;border-radius:2px} /* orange */
+mark{
+  position:relative;
+  display:inline-block;
+  padding:1px 3px 1px 3px;
+  border-radius:3px;
+  line-height:1.9;
+  vertical-align:baseline;
+}
+mark.y{background:#FFE066;color:#333}
+mark.g{background:#B9F0C8;color:#1a4a2a}
+mark.r{background:#FFD0CC;color:#7a1a1a}
+mark.b{background:#C5E1FF;color:#0a3060}
+mark.o{background:#FFE4B0;color:#7a4000}
+
+/* ── Corner badges (右上角小標) ── */
+mark::after{
+  position:absolute;
+  top:-11px;
+  right:-1px;
+  font-size:8px;
+  font-weight:700;
+  font-family:var(--font-zh);
+  line-height:1;
+  padding:1px 4px;
+  border-radius:3px 3px 3px 0;
+  white-space:nowrap;
+  pointer-events:none;
+  letter-spacing:.2px;
+  z-index:2;
+}
+mark.y::after{content:"重要術語";background:#C8920A;color:#fff}
+mark.g::after{content:"正確翻譯";background:#1A7A4A;color:#fff}
+mark.r::after{content:"常見錯誤";background:#C0392B;color:#fff}
+mark.b::after{content:"關鍵概念";background:#1F6FB8;color:#fff}
+mark.o::after{content:"法律對照";background:#B06000;color:#fff}
 
 /* ── Annotation tooltip ── */
 .ann{position:relative;cursor:pointer;border-bottom:2px dashed var(--blue)}
