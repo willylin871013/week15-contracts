@@ -1187,23 +1187,33 @@ function showPopup(word, x, y){
 }
 
 // ── dblclick handler ────────────────────────────────────────
-document.addEventListener('dblclick', e=>{
-  const sel = window.getSelection();
-  if(!sel || sel.isCollapsed) return;
-  const word = sel.toString().trim();
-  if(!word || word.length<2 || word.length>80) return;
-  showPopup(word, e.clientX, e.clientY);
-  e.preventDefault();
+// 修正：dblclick 之前會先觸發兩個 click，用 timer 延後關閉，讓 dblclick 能取消它
+let _closeTimer = null;
+
+document.addEventListener('dblclick', e => {
+  clearTimeout(_closeTimer);
+  // requestAnimationFrame：等瀏覽器完成選字後再讀取 selection
+  requestAnimationFrame(() => {
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed) return;
+    const word = sel.toString().trim();
+    if (!word || word.length < 2 || word.length > 100) return;
+    showPopup(word, e.clientX, e.clientY);
+  });
 });
 
-// Close popup on outside click / scroll
-document.addEventListener('click', e=>{
-  if(!popup.contains(e.target)) popup.style.display='none';
+// 單擊關閉 popup（延遲 280ms，讓 dblclick 有機會取消此關閉動作）
+document.addEventListener('click', e => {
+  if (!popup.contains(e.target)) {
+    clearTimeout(_closeTimer);
+    _closeTimer = setTimeout(() => { popup.style.display = 'none'; }, 280);
+  }
 });
-document.addEventListener('keydown', e=>{
-  if(e.key==='Escape') popup.style.display='none';
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { popup.style.display = 'none'; window.getSelection()?.removeAllRanges(); }
 });
-window.addEventListener('scroll', ()=>{ popup.style.display='none'; }, {passive:true});
+window.addEventListener('scroll', () => { popup.style.display = 'none'; }, {passive: true});
 
 </body>
 </html>
